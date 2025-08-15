@@ -10,16 +10,17 @@ public class UserFollowerConfigurations : IEntityTypeConfiguration<UserFollower>
     {
         builder.ToTable("UserFollowers");
 
-        builder.HasKey(uf => new { uf.FollowerId, uf.FollowedId });
+        builder.HasKey(uf => new { uf.UserId, uf.FollowedUserId });
 
-        builder.HasOne(uf => uf.Follower)
+        builder.HasOne(uf => uf.User)
             .WithMany(u => u.Following)
-            .HasForeignKey(uf => uf.FollowerId)
+            .HasForeignKey(uf => uf.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne(uf => uf.Followed)
+        builder.HasOne(uf => uf.FollowedUser)
             .WithMany(u => u.Followers)
-            .HasForeignKey(uf => uf.FollowedId)
+            .HasForeignKey(uf => uf.FollowedUserId)
             .OnDelete(DeleteBehavior.Cascade);
     }
+
 }

@@ -25,7 +25,6 @@ public class AppDbContext : DbContext
         model.ApplyConfiguration(new CommentConfigurations());
         model.ApplyConfiguration(new UserConfigurations());
         model.ApplyConfiguration(new PostConfigurations());
-        model.ApplyConfiguration(new StoryConfigurations());
         model.ApplyConfiguration(new MediaConfigurations());
         model.ApplyConfiguration(new LikeConfigurations());
 

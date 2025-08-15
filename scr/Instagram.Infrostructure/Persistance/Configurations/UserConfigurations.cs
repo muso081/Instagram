@@ -12,38 +12,43 @@ namespace Instagram.Infrastructure.Persistance.Configurations
 
             builder.HasKey(u => u.UserId);
 
-            builder.Property(u => u.Username).HasMaxLength(50).IsRequired();
-            builder.HasIndex(u => u.Username).IsUnique();
+            builder.Property(u => u.Username)
+                .IsRequired()
+                .HasMaxLength(50);
 
-            builder.Property(u => u.Password).HasMaxLength(100).IsRequired();
+            builder.Property(u => u.Email)
+                .IsRequired()
+                .HasMaxLength(100);
 
-            builder.Property(u => u.Email).HasMaxLength(100).IsRequired();
+            builder.Property(u => u.Password)
+                .IsRequired()
+                .HasMaxLength(255);
 
-            builder.Property(u => u.Bio).HasMaxLength(250);
+            builder.Property(u => u.Bio)
+                .HasMaxLength(500);
+
+            builder.Property(u => u.ProfilePictureUrl)
+                .HasMaxLength(255);
 
             builder.HasMany(u => u.Posts)
                 .WithOne(p => p.User)
-                .HasForeignKey(p => p.UserId);
+                .HasForeignKey(p => p.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasMany(u => u.Comments)
                 .WithOne(c => c.User)
-                .HasForeignKey(c => c.UserId);
+                .HasForeignKey(c => c.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            builder
-                .HasMany(u => u.Following)
-                .WithMany(u => u.Followers)
-                .UsingEntity<Dictionary<string, object>>(
-                    "UserFollow",
-                    j => j
-                        .HasOne<User>()
-                        .WithMany()
-                        .HasForeignKey("FollowingId")
-                        .OnDelete(DeleteBehavior.Cascade),
-                    j => j
-                        .HasOne<User>()
-                        .WithMany()
-                        .HasForeignKey("FollowerId")
-                        .OnDelete(DeleteBehavior.ClientCascade));
+            builder.HasMany(u => u.Followers)
+                .WithOne(f => f.FollowedUser)
+                .HasForeignKey(f => f.FollowedUserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(u => u.Following)
+                .WithOne(f => f.User)
+                .HasForeignKey(f => f.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
         }
     }
