@@ -14,11 +14,20 @@ namespace Instagram.Domain.Entities
         public string Password { get; set; }
         public string? Bio { get; set; }
         public string? ProfilePictureUrl { get; set; }
-
+        public UserRole Role { get; set; } = UserRole.User;
         public ICollection<Post> Posts { get; set; }
         public ICollection<UserFollower> Followers { get; set; } 
         public ICollection<UserFollower> Following { get; set; }
 
         public ICollection<Comment> Comments { get; set; }
+        public ICollection<Like> Likes { get; set; }
+
+        public enum UserRole
+        {
+            User,
+            Admin,
+            SuperAdmin
+        }
+
     }
 }

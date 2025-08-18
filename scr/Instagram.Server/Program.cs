@@ -1,4 +1,3 @@
-
 namespace Instagram.Server
 {
     public class Program

@@ -7,4 +7,11 @@ public class CreateUserDto
     public string Email { get; set; }
     public string Password { get; set; }
     public string? Bio { get; set; }
+    public UserRoleDto Role { get; set; } = UserRoleDto.User;
+    public enum UserRoleDto
+    {
+        User,
+        Admin,
+        SuperAdmin
+    }
 }
