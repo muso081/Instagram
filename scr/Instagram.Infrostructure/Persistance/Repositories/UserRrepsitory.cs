@@ -18,6 +18,16 @@ public class UserRrepsitory : IUserRepository
         _context.Users.Remove(user);
     }
 
+    public async Task<User> GetByEmailAsync(string email)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        if (user == null)
+        {
+            throw new Exception($"User Not found with Email {email}");
+        }
+        return user;
+    }
+
     public async Task<User> GetByIdAsync(long userId)
     {
         var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
@@ -28,10 +38,22 @@ public class UserRrepsitory : IUserRepository
         return user;
     }
 
-    public async Task<ICollection<User>> GetByUsernameAsync(string username)
+    public async Task<User> GetByUsernameAsync(string username)
     {
-        var users = await _context.Users.Where(u => u.Username.Contains(username)).ToListAsync();
+        var users = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
+        if (users == null)
+        {
+            throw new Exception($"User Not found with Username {username}");
+        }
         return users;
+    }
+
+    public async Task<long> InsertAsync(User user)
+    {
+        await _context.Users.AddAsync(user);
+        await _context.SaveChangesAsync();
+        return user.UserId;
+
     }
 
     public async Task<int> SaveChangesAsync()

@@ -1,6 +1,4 @@
-﻿using static Instagram.Application.DTOs.UserDtos.CreateUserDto;
-
-namespace Instagram.Application.DTOs.UserDtos;
+﻿namespace Instagram.Application.DTOs.UserDtos;
 
 public class UserTokenDto
 {
@@ -10,4 +8,10 @@ public class UserTokenDto
     public string Password { get; set; }
     public UserRoleDto Role { get; set; }
 
+    public enum UserRoleDto
+    {
+        User,
+        Admin,
+        SuperAdmin
+    }
 }
