@@ -12,12 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\CommentServices\" />
     <Folder Include="Services\MediaServices\" />
     <Folder Include="Services\LikeServices\" />
     <Folder Include="Services\UserFollowerServices\" />
-    <Folder Include="Services\PostServices\" />
-    <Folder Include="Services\UserServicecs\" />
   </ItemGroup>
 
   <ItemGroup>

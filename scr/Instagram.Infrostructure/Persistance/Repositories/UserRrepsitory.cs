@@ -61,8 +61,26 @@ public class UserRrepsitory : IUserRepository
         return await _context.SaveChangesAsync();
     }
 
+    public async Task<ICollection<User>> SelectAllAsync()
+    {
+        var users = await _context.Users.ToListAsync();
+        if (users == null)
+        {
+            throw new Exception("No users found.");
+        }
+        return users;
+    }
+
     public void Update(User user)
     {
         _context.Users.Update(user);
+    }
+
+    public async Task UpdateUserRole(long userId, User.UserRole role)
+    {
+       var user = await GetByIdAsync(userId);
+       user.Role = role;
+      _context.Users.Update(user);
+      await _context.SaveChangesAsync();
     }
 }

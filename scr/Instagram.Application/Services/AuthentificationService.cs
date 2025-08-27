@@ -4,6 +4,9 @@ using Instagram.Application.DTOs.UserDtos;
 using Instagram.Application.Interfaces;
 using Instagram.Application.Services.Helper;
 using Instagram.Domain.Entities;
+using Microsoft.AspNetCore.Identity.Data;
+using System.Security.Claims;
+using static Instagram.Application.DTOs.UserDtos.CreateUserDto;
 using static Instagram.Domain.Entities.User;
 
 namespace Instagram.Application.Services
@@ -23,9 +26,53 @@ namespace Instagram.Application.Services
             _validator = validator;
         }
 
-        public Task<TokenInfoDto> RefreshTokenAsync(RefreshTokenDto refreshToken)
+        public async Task<TokenInfoDto> RefreshTokenAsync(RefreshTokenDto request)
         {
-            throw new NotImplementedException();
+
+            ClaimsPrincipal? principal = _tokenService.GetPrincipalFromExpiredToken(request.AccessToken);
+            if (principal == null) throw new Exception("Invalid access token.");
+
+
+            var userClaim = principal.FindFirst(c => c.Type == "UserId");
+            var userId = long.Parse(userClaim.Value);
+
+
+            var refreshToken = await _refreshTokenRepository.SelectRefreshToken(request.RefreshToken, userId);
+            if (refreshToken == null || refreshToken.ExpiresAt < DateTime.UtcNow || refreshToken.IsActive)
+                throw new Exception("Invalid or expired refresh token.");
+
+            refreshToken.IsActive = true;
+
+            var user = await _userRepository.GetByIdAsync(userId);
+
+            var userGetDto = new UserTokenDto()
+            {
+                UserId = user.UserId,
+                Username = user.Username,
+                Email = user.Email,
+                Role = (UserTokenDto.UserRoleDto)user.Role,
+            };
+
+            var newAccessToken = _tokenService.GenerateAccessToken(userGetDto);
+            var newRefreshToken = _tokenService.GenerateRefreshToken();
+
+            var refreshTokenToDB = new RefreshToken()
+            {
+                Token = newRefreshToken,
+                ExpiresAt = DateTime.UtcNow.AddDays(21),
+                IsActive = false,
+                UserId = user.UserId
+            };
+
+            await _refreshTokenRepository.AddRefreshTokenAsync(refreshTokenToDB);
+
+            return new TokenInfoDto
+            {
+                AccessToken = newAccessToken,
+                RefreshToken = newRefreshToken,
+                TokenType = "Bearer",
+                ExpiresAt = 24
+            };
         }
 
         public async Task<TokenInfoDto> SignInAsync(LoginDto user)
@@ -77,14 +124,14 @@ namespace Instagram.Application.Services
             {
                 throw new ArgumentException(validationResult.Errors.FirstOrDefault()?.ErrorMessage);
             }
-            var ahshedPassword = PasswordHasher.HashedPass(user.Password);
+            var hashedPassword = PasswordHasher.HashedPass(user.Password);
             var newUser = new User
             {
                 UserId = user.UserId,
                 Username = user.Username,
                 Email = user.Email,
-                Password = ahshedPassword.Hash,
-                Salt = ahshedPassword.Salt,
+                Password = hashedPassword.Hash,
+                Salt = hashedPassword.Salt,
                 Bio = user.Bio,
                 Role = (UserRole)user.Role
             };

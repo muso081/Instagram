@@ -1,15 +1,15 @@
 ﻿using Instagram.Application.Interfaces;
 using Instagram.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
 
 namespace Instagram.Infrastructure.Persistance.Repositories;
 
 public class CommentRepository(AppDbContext _appDbContext) : ICommentRepository
 {
-    public async Task InsertAsync(Comment comment)
+    public async Task<long> InsertAsync(Comment comment)
     {
         await _appDbContext.Comments.AddAsync(comment);
+        return comment.CommentId;
     }
 
     public void Delete(long commentId)
@@ -31,15 +31,15 @@ public class CommentRepository(AppDbContext _appDbContext) : ICommentRepository
         return res;
     }
 
-    public async Task<IEnumerable<Comment>> GetByPostIdAsync(long postId)
+    public async Task<ICollection<Comment>> GetByPostIdAsync(long postId)
     {
         var res = await _appDbContext.Posts.Include(c => c.Comments).
             FirstOrDefaultAsync(p => p.PostId == postId)
-            ?? throw new Exception ($"Post with Id {postId} is not found");
+            ?? throw new Exception($"Post with Id {postId} is not found");
         return res.Comments;
     }
 
-    public async Task<IEnumerable<Comment>> GetByUserIdAsync(long userId)
+    public async Task<ICollection<Comment>> GetByUserIdAsync(long userId)
     {
         var res = await _appDbContext.Users.Include(u => u.Comments)
             .FirstOrDefaultAsync(u => u.UserId == userId)
