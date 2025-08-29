@@ -25,7 +25,7 @@ public class MediaRepository(AppDbContext _appDbContext) : IMediaRepository
         return res;
     }
 
-    public async Task<IEnumerable<Media>> GetByPostAsync(long postId)
+    public async Task<ICollection<Media>> GetByPostAsync(long postId)
     {
         var res = await _appDbContext.Posts
             .Include(p => p.Media)
@@ -34,15 +34,6 @@ public class MediaRepository(AppDbContext _appDbContext) : IMediaRepository
 
         return res.Media;
     }
-
-    public async Task<IEnumerable<Media>> GetByStoryAsync(long storyId)
-    {
-        var res = await _appDbContext.Media
-            .Where(m => m.PostId == storyId)
-            .ToListAsync();
-        return res;
-    }
-
     public async Task<int> SaveChangesAsync()
     {
        return await _appDbContext.SaveChangesAsync();

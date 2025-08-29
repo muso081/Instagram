@@ -7,9 +7,12 @@ public class CreateMediaDto
     public long PostId { get; set; }
     public string Url { get; set; }
     public MediaTypeDtoEnum MediaType { get; set; }
+
+
+    public enum MediaTypeDtoEnum
+    {
+        Image,
+        Video
+    }
 }
-public enum MediaTypeDtoEnum
-{
-    Image,
-    Video
-}
+

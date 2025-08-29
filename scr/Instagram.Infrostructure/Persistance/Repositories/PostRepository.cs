@@ -29,7 +29,7 @@ public class PostRepository : IPostRepository
         return post;
     }
 
-    public async Task<IEnumerable<Post>> GetByUserAsync(long userId)
+    public async Task<ICollection<Post>> GetByUserAsync(long userId)
     {
         var res = await _appDbContext.Posts.Include(m => m.Media)
             .Where(p => p.UserId == userId)
@@ -37,9 +37,10 @@ public class PostRepository : IPostRepository
         return res;
     }
 
-    public async Task InsertAsync(Post post)
+    public async Task<long> InsertAsync(Post post)
     {
         await _appDbContext.Posts.AddAsync(post);
+        return post.PostId;
     }
 
     public async Task<int> SaveChangesAsync()

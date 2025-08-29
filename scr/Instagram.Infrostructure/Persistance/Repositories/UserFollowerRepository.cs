@@ -11,25 +11,25 @@ public class UserFollowerRepository(AppDbContext _appDbContext) : IUserFollowerR
         var follow = new UserFollower
         {  
             UserId = userId,
-            FollowedUserId = followedUserId,
+            FollowingUserId = followedUserId,
             FollowedAt = DateTime.UtcNow
         };
         await _appDbContext.UserFollowers.AddAsync(follow);
     }
 
-    public async Task<IEnumerable<UserFollower>> GetFollowersAsync(long userId)
+    public async Task<ICollection<UserFollower>> GetFollowersAsync(long userId)
     {
         return await _appDbContext.UserFollowers.Where(u => u.UserId == userId).ToListAsync();
     }
 
-    public async Task<IEnumerable<UserFollower>> GetFollowingAsync(long userId)
+    public async Task<ICollection<UserFollower>> GetFollowingAsync(long userId)
     {
-        return await _appDbContext.UserFollowers.Where(u => u.FollowedUserId == userId).ToListAsync();
+        return await _appDbContext.UserFollowers.Where(u => u.FollowingUserId == userId).ToListAsync();
     }
 
     public async Task<bool> IsFollowingAsync(long  userId, long followedUserId)
     {
-        return await _appDbContext.UserFollowers.AnyAsync(u => u.UserId == userId && u.FollowedUserId == followedUserId);
+        return await _appDbContext.UserFollowers.AnyAsync(u => u.UserId == userId && u.FollowingUserId == followedUserId);
     }
 
     public async Task<int> SaveChangesAsync()
@@ -39,7 +39,7 @@ public class UserFollowerRepository(AppDbContext _appDbContext) : IUserFollowerR
 
     public async Task UnfollowAsync(long userId, long followedUserId)
     {
-        var res = await _appDbContext.UserFollowers.FirstOrDefaultAsync(u => u.UserId == userId && u.FollowedUserId == followedUserId);
+        var res = await _appDbContext.UserFollowers.FirstOrDefaultAsync(u => u.UserId == userId && u.FollowingUserId == followedUserId);
         if (res == null) throw new Exception($"Follower with id {userId} is not found to delete");
         _appDbContext.UserFollowers.Remove(res);
     }
