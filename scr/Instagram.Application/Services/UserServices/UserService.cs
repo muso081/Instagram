@@ -5,7 +5,7 @@ using static Instagram.Domain.Entities.User;
 
 namespace Instagram.Application.Services.UserServices;
 
-internal class UserService(IUserRepository _userRepository) : IUserService
+public class UserService(IUserRepository _userRepository) : IUserService
 {
     public async Task DeleteUser(long id)
     {

@@ -22,7 +22,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Instagram.Application\Instagram.Application.csproj" />
-    <ProjectReference Include="..\Instagram.Domain\Instagram.Domain.csproj" />
   </ItemGroup>
 
 </Project>

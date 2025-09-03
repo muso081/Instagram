@@ -3,9 +3,9 @@ using Instagram.Application.DTOs.CommentDtos;
 
 namespace Instagram.Application.Validators;
 
-public class CommentValodators : AbstractValidator<CreateCommentDto>
+public class CommentValidators : AbstractValidator<CreateCommentDto>
 {
-    public CommentValodators()
+    public CommentValidators()
     {
         RuleFor(x => x.PostId)
             .NotEmpty().WithMessage("PostId is required.")

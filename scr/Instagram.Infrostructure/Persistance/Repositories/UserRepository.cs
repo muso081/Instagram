@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Instagram.Infrastructure.Persistance.Repositories;
 
-public class UserRrepsitory : IUserRepository
+public class UserRepository : IUserRepository
 {
     private readonly AppDbContext _context;
 
-    public UserRrepsitory(AppDbContext context)
+    public UserRepository(AppDbContext context)
     {
         _context = context;
     }

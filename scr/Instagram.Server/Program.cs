@@ -1,3 +1,6 @@
+using Instagram.Server.Configurations;
+using Instagram.Server.Middlewares;
+
 namespace Instagram.Server
 {
     public class Program
@@ -12,6 +15,10 @@ namespace Instagram.Server
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.ConfigureSerilog();
+            builder.ConfigureDI();
+            builder.ConfigureJwtAuth();
+            builder.ConfigureDatabase();
 
             var app = builder.Build();
 
@@ -28,6 +35,7 @@ namespace Instagram.Server
 
 
             app.MapControllers();
+            app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
             app.Run();
         }

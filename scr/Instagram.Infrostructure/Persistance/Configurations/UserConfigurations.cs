@@ -41,8 +41,8 @@ namespace Instagram.Infrastructure.Persistance.Configurations
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasMany(u => u.Followers)
-                .WithOne(f => f.FollowedUser)
-                .HasForeignKey(f => f.FollowedUserId)
+                .WithOne(f => f.FollowingUser)
+                .HasForeignKey(f => f.FollowingUserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasMany(u => u.Following)
