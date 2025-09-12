@@ -36,7 +36,7 @@ public static class DependancyInjectionConfiguration
         builder.Services.AddScoped<IUserFollowerRepository, UserFollowerRepository>();
 
         var jwtSettings = builder.Configuration.GetSection("Jwt").Get<JwtSettings>();
-        builder.Services.AddSingleton<JwtSettings>(jwtSettings);
+        //builder.Services.AddSingleton<JwtSettings>(jwtSettings);
 
         builder.Services.AddSingleton<Cloudinary>();
 

@@ -7,6 +7,6 @@ public interface IMediaService
 {
     Task<GetMediaDto> GetByIdAsync(long mediaId);
     Task<ICollection<GetMediaDto>> GetByPostAsync(long postId);
-    Task InsertAsync(CreateMediaDto media);
+    Task InsertAsync(Media media);
     Task Delete(long mediaId);
 }

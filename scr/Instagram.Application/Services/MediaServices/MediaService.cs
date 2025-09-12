@@ -25,7 +25,7 @@ public class MediaService(IMediaRepository _mediaRepository) : IMediaService
         return res.Select(MapToGetMediaDto).ToList();
     }
 
-    public async Task InsertAsync(CreateMediaDto media)
+    public async Task InsertAsync(Media media)
     {
         var newMedia = new Media()
         {
